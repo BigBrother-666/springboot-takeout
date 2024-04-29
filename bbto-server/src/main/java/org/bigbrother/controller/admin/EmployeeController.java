@@ -26,6 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
+@Api(value = "员工相关接口")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
@@ -100,6 +101,22 @@ public class EmployeeController {
     public Result<String> changeUserStatus(@PathVariable Integer status, Long id) {
         log.info("修改id={}员工状态为{}", id, status);
         employeeService.changeUserStatus(status, id);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询员工信息")
+    public Result<Employee> getById(@PathVariable Long id) {
+        log.info("查询id={}员工", id);
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
+
+    @ApiOperation("修改员工信息")
+    @PutMapping
+    public Result<String> update(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("修改id={}员工信息", employeeDTO.getId());
+        employeeService.update(employeeDTO);
         return Result.success();
     }
 }
