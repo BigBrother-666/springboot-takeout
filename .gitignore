@@ -4,5 +4,7 @@
 *.class
 *Test.java
 **/test/
+bbto-server/src/main/resources/application-dev.yml
+AccessKey.csv
 nginx-1.20.2
 项目接口

@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import org.bigbrother.constant.MessageConstant;
 import org.bigbrother.constant.PasswordConstant;
 import org.bigbrother.constant.StatusConstant;
-import org.bigbrother.context.BaseContext;
 import org.bigbrother.dto.EmployeeDTO;
 import org.bigbrother.dto.EmployeeLoginDTO;
 import org.bigbrother.dto.EmployeePageQueryDTO;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -78,10 +76,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 设置其他属性
         employee.setStatus(StatusConstant.ENABLE);
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
         employeeMapper.insert(employee);
     }
 
@@ -97,8 +91,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = Employee.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
 
         employeeMapper.update(employee);
@@ -115,8 +107,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
-        employee.setUpdateUser(BaseContext.getCurrentId());
-        employee.setUpdateTime(LocalDateTime.now());
         employeeMapper.update(employee);
     }
 
