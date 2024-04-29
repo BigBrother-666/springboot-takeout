@@ -1,22 +1,27 @@
 package org.bigbrother.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.bigbrother.constant.MessageConstant;
 import org.bigbrother.constant.PasswordConstant;
 import org.bigbrother.constant.StatusConstant;
 import org.bigbrother.context.BaseContext;
 import org.bigbrother.dto.EmployeeDTO;
 import org.bigbrother.dto.EmployeeLoginDTO;
+import org.bigbrother.dto.EmployeePageQueryDTO;
 import org.bigbrother.entity.Employee;
 import org.bigbrother.exception.AccountLockedException;
 import org.bigbrother.exception.AccountNotFoundException;
 import org.bigbrother.exception.PasswordErrorException;
 import org.bigbrother.mapper.EmployeeMapper;
+import org.bigbrother.result.PageResult;
 import org.bigbrother.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -65,11 +70,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-    /**
-     * 新增员工
-     *
-     * @param employeeDTO 员工信息
-     */
     @Override
     public void save(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
@@ -80,7 +80,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
         employee.setCreateUser(BaseContext.getCurrentId());
         employee.setUpdateUser(BaseContext.getCurrentId());
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
         employeeMapper.insert(employee);
+    }
+
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public void changeUserStatus(Integer status, Long id) {
+        Employee employee = Employee.builder().id(id).status(status).build();
+
+        employeeMapper.update(employee);
     }
 
 }
