@@ -2,12 +2,11 @@ package org.bigbrother.mapper;
 
 import com.github.pagehelper.Page;
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.bigbrother.annotation.AutoFill;
 import org.bigbrother.dto.EmployeePageQueryDTO;
 import org.bigbrother.entity.Employee;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 import org.bigbrother.enumeration.OperationType;
 
 @Mapper

@@ -21,13 +21,13 @@ public class GlobalExceptionHandler {
      * @param ex 捕获的异常
      * @return 结果
      */
-    @ExceptionHandler
+    @ExceptionHandler(BaseException.class)
     public Result<String> exceptionHandler(BaseException ex){
         log.error("异常信息：{}", ex.getMessage());
         return Result.error(ex.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public Result<String> exceptionHandler(SQLIntegrityConstraintViolationException ex){
         log.error("异常信息：{}", ex.getMessage());
         if(ex.getMessage().contains("Duplicate entry")){
