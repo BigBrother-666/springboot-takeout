@@ -47,20 +47,40 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     }
 
     /**
-     * 通过knife4j生成接口文档
-     * @return
+     * 通过knife4j生成admin接口文档
      */
     @Bean
-    public Docket docket() {
+    public Docket adminDocket() {
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("bbto项目接口文档")
                 .version("2.0")
                 .description("bbto项目接口文档")
                 .build();
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("管理端接口")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("org.bigbrother.controller"))
+                .apis(RequestHandlerSelectors.basePackage("org.bigbrother.controller.admin"))
+                .paths(PathSelectors.any())
+                .build();
+        return docket;
+    }
+
+    /**
+     * 通过knife4j生成user接口文档
+     */
+    @Bean
+    public Docket userDocket() {
+        ApiInfo apiInfo = new ApiInfoBuilder()
+                .title("bbto项目接口文档")
+                .version("2.0")
+                .description("bbto项目接口文档")
+                .build();
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("用户端接口")
+                .apiInfo(apiInfo)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("org.bigbrother.controller.user"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;
