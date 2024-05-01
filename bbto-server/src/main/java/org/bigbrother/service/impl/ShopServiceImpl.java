@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ShopServiceImpl implements ShopService {
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     @Autowired
-    public ShopServiceImpl(RedisTemplate redisTemplate) {
+    public ShopServiceImpl(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
