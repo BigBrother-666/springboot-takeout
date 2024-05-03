@@ -25,6 +25,6 @@ public class ShopController {
     public Result<Integer> getStatus() {
         Integer status = shopService.getStatus();
         log.info("获取店铺状态为：{}", status);
-        return Result.success();
+        return Result.success(status);
     }
 }
