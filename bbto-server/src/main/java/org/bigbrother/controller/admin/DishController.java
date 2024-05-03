@@ -3,6 +3,7 @@ package org.bigbrother.controller.admin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.bigbrother.constant.RedisKeyConstant;
 import org.bigbrother.dto.DishDTO;
 import org.bigbrother.dto.DishPageQueryDTO;
 import org.bigbrother.entity.Dish;
@@ -11,9 +12,11 @@ import org.bigbrother.result.Result;
 import org.bigbrother.service.DishService;
 import org.bigbrother.vo.DishVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController("AdminDishController")
 @RequestMapping("/admin/dish")
@@ -22,10 +25,13 @@ import java.util.List;
 public class DishController {
 
     private final DishService dishService;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     @Autowired
-    public DishController(DishService dishService) {
+    public DishController(DishService dishService,
+                          RedisTemplate<Object, Object> redisTemplate) {
         this.dishService = dishService;
+        this.redisTemplate = redisTemplate;
     }
 
     @PostMapping
@@ -33,6 +39,7 @@ public class DishController {
     public Result<String> save(@RequestBody DishDTO dishDTO) {
         log.info("新增菜品：{}", dishDTO);
         dishService.saveWithFlavor(dishDTO);
+        cleanRedisCache(RedisKeyConstant.KEY_CATEGORY_PREFIX + dishDTO.getCategoryId());
         return Result.success();
     }
 
@@ -48,6 +55,7 @@ public class DishController {
     public Result<String> delete(@RequestParam List<Long> ids) {
         log.info("删除id={}菜品", ids);
         dishService.deleteByIds(ids);
+        cleanRedisCache(RedisKeyConstant.KEY_CATEGORY_PREFIX + "*");
         return Result.success();
     }
 
@@ -64,6 +72,7 @@ public class DishController {
     public Result<String> update(@RequestBody DishDTO dishDTO) {
         log.info("修改id={}菜品", dishDTO.getId());
         dishService.updateWithFlavor(dishDTO);
+        cleanRedisCache(RedisKeyConstant.KEY_CATEGORY_PREFIX + "*");
         return Result.success();
     }
 
@@ -72,14 +81,26 @@ public class DishController {
     public Result<String> changeUserStatus(@PathVariable Integer status, Long id) {
         log.info("修改id={}菜品状态为{}", id, status);
         dishService.changeDishStatus(status, id);
+        cleanRedisCache(RedisKeyConstant.KEY_CATEGORY_PREFIX + "*");
         return Result.success();
     }
 
     @GetMapping("/list")
     @ApiOperation("根据分类id查询菜品")
-    public Result<List<Dish>> list(Long categoryId){
+    public Result<List<Dish>> list(Long categoryId) {
         log.info("查询分类id={}包含的菜品", categoryId);
         List<Dish> list = dishService.list(categoryId);
         return Result.success(list);
+    }
+
+    /**
+     * 清理redis指定key缓存
+     * @param pattern 匹配的key
+     */
+    private void cleanRedisCache(String pattern) {
+        Set<Object> keys = redisTemplate.keys(pattern);
+        if (keys != null) {
+            redisTemplate.delete(keys);
+        }
     }
 }

@@ -42,5 +42,6 @@
                 type=#{type}
             </if>
         </where>
+        order by type
     </select>
 </mapper>
