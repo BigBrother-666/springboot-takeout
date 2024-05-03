@@ -58,6 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getByType(String type) {
+
         return categoryMapper.getByType(type);
     }
 

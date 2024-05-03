@@ -16,6 +16,7 @@ import org.bigbrother.mapper.SetmealDishMapper;
 import org.bigbrother.mapper.SetmealMapper;
 import org.bigbrother.result.PageResult;
 import org.bigbrother.service.SetmealService;
+import org.bigbrother.vo.DishItemVO;
 import org.bigbrother.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,5 +135,15 @@ public class SetmealServiceImpl implements SetmealService {
                 .status(status)
                 .build();
         setmealMapper.update(setmeal);
+    }
+
+    @Override
+    public List<Setmeal> list(Setmeal setmeal) {
+        return setmealMapper.list(setmeal);
+    }
+
+    @Override
+    public List<DishItemVO> getDishItemById(Long id) {
+        return setmealMapper.getDishItemBySetmealId(id);
     }
 }

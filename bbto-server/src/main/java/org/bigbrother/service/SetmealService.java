@@ -4,7 +4,9 @@ package org.bigbrother.service;
 import org.bigbrother.dto.DishDTO;
 import org.bigbrother.dto.SetmealDTO;
 import org.bigbrother.dto.SetmealPageQueryDTO;
+import org.bigbrother.entity.Setmeal;
 import org.bigbrother.result.PageResult;
+import org.bigbrother.vo.DishItemVO;
 import org.bigbrother.vo.SetmealVO;
 
 import java.util.List;
@@ -48,4 +50,14 @@ public interface SetmealService {
      * @param id 修改的套餐id
      */
     void changeDishStatus(Integer status, Long id);
+
+    /**
+     * 根据分类id查询套餐
+     */
+    List<Setmeal> list(Setmeal setmeal);
+
+    /**
+     * 根据套餐id查询包含的菜品列表
+     */
+    List<DishItemVO> getDishItemById(Long id);
 }

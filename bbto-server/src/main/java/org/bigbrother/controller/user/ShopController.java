@@ -8,7 +8,7 @@ import org.bigbrother.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("userShopController")
+@RestController("UserShopController")
 @RequestMapping("/user/shop")
 @Api(tags = "店铺操作接口")
 @Slf4j

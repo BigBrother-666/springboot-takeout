@@ -35,4 +35,12 @@
         </if>
         order by sort ,create_time desc
     </select>
+    <select id="getByType" resultType="org.bigbrother.entity.Category">
+        select * from category
+        <where>
+            <if test="type != null">
+                type=#{type}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -50,7 +50,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addInterceptor(jwtTokenUserInterceptor)
                 .addPathPatterns("/user/**")
                 .excludePathPatterns("/user/user/login")
-                .excludePathPatterns("/user/user/status");
+                .excludePathPatterns("/user/shop/status");
     }
 
     /**
@@ -63,14 +63,13 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .version("2.0")
                 .description("bbto项目接口文档")
                 .build();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("管理端接口")
                 .apiInfo(apiInfo)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("org.bigbrother.controller.admin"))
                 .paths(PathSelectors.any())
                 .build();
-        return docket;
     }
 
     /**
