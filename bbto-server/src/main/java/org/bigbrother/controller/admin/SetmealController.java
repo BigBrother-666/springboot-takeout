@@ -3,6 +3,7 @@ package org.bigbrother.controller.admin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.bigbrother.constant.RedisKeyConstant;
 import org.bigbrother.dto.SetmealDTO;
 import org.bigbrother.dto.SetmealPageQueryDTO;
 import org.bigbrother.result.PageResult;
@@ -10,6 +11,7 @@ import org.bigbrother.result.Result;
 import org.bigbrother.service.SetmealService;
 import org.bigbrother.vo.SetmealVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +31,7 @@ public class SetmealController {
     }
 
     @PostMapping
+    @CacheEvict(cacheNames = RedisKeyConstant.KEY_SETMEAL_PREFIX, key = "#setmealDTO.categoryId")
     @ApiOperation("新增套餐")
     public Result<String> save(@RequestBody SetmealDTO setmealDTO) {
         log.info("新增套餐：{}", setmealDTO);
@@ -44,6 +47,7 @@ public class SetmealController {
     }
 
     @ApiOperation("批量删除套餐")
+    @CacheEvict(cacheNames = RedisKeyConstant.KEY_SETMEAL_PREFIX, allEntries = true)
     @DeleteMapping
     public Result<String> delete(@RequestParam List<Long> ids) {
         log.info("删除id={}套餐", ids);
@@ -60,6 +64,7 @@ public class SetmealController {
     }
 
     @PutMapping
+    @CacheEvict(cacheNames = RedisKeyConstant.KEY_SETMEAL_PREFIX, allEntries = true)
     @ApiOperation("修改套餐")
     public Result<String> update(@RequestBody SetmealDTO setmealDTO) {
         log.info("修改id={}套餐", setmealDTO.getId());
@@ -68,6 +73,7 @@ public class SetmealController {
     }
 
     @ApiOperation("启用/禁用套餐")
+    @CacheEvict(cacheNames = RedisKeyConstant.KEY_SETMEAL_PREFIX, allEntries = true)
     @PostMapping("/status/{status}")
     public Result<String> changeUserStatus(@PathVariable Integer status, Long id) {
         log.info("修改id={}套餐状态为{}", id, status);

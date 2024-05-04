@@ -39,7 +39,6 @@ public class AutoFillAspect {
         // 公共字段填充
         try {
             if (operationType == OperationType.INSERT) {
-
                 Method setCreateTime = object.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
                 Method setCreateUser = object.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_USER, Long.class);
                 Method setUpdateTime = object.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
@@ -48,11 +47,9 @@ public class AutoFillAspect {
                 setCreateUser.invoke(object, BaseContext.getCurrentId());
                 setUpdateTime.invoke(object, LocalDateTime.now());
                 setUpdateUser.invoke(object, BaseContext.getCurrentId());
-
             } else {
                 Method setUpdateTime = object.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
                 Method setUpdateUser = object.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
-
                 setUpdateTime.invoke(object, LocalDateTime.now());
                 setUpdateUser.invoke(object, BaseContext.getCurrentId());
             }
