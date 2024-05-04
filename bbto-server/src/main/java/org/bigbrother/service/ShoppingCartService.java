@@ -23,4 +23,10 @@ public interface ShoppingCartService {
      * 清空购物车
      */
     void clean();
+
+    /**
+     * 减少购物车物品
+     * @param shoppingCartDTO 减少的物品
+     */
+    void subShoppingCart(ShoppingCartDTO shoppingCartDTO);
 }
