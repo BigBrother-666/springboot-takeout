@@ -1,6 +1,9 @@
 package org.bigbrother.service;
 
 import org.bigbrother.dto.ShoppingCartDTO;
+import org.bigbrother.entity.ShoppingCartItem;
+
+import java.util.List;
 
 public interface ShoppingCartService {
 
@@ -9,4 +12,10 @@ public interface ShoppingCartService {
      * @param shoppingCartDTO 添加的商品
      */
     void addShoppingCart(ShoppingCartDTO shoppingCartDTO);
+
+    /**
+     * 查询购物车
+     * @return 购物车数据
+     */
+    List<ShoppingCartItem> list();
 }

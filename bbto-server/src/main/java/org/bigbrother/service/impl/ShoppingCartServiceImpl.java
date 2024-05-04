@@ -39,21 +39,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         // 查询添加的菜品是否已经在购物车
         List<ShoppingCartItem> list = shoppingCartMapper.list(shoppingCartItem);
 
-        if(list!=null&& !list.isEmpty()){
+        if (list != null && !list.isEmpty()) {
             // 该菜品在购物车已存在，则只需数量+1
             ShoppingCartItem item = list.get(0);
             item.setNumber(item.getNumber() + 1);
             shoppingCartMapper.updateNumberById(item);
-        }else {
+        } else {
             // 否则将该菜品添加至购物车
             Long dishId = shoppingCartDTO.getDishId();
-            if(dishId != null){
+            if (dishId != null) {
                 // 添加购物车的是菜品
                 Dish dish = dishMapper.getById(dishId);
                 shoppingCartItem.setName(dish.getName());
                 shoppingCartItem.setImage(dish.getImage());
                 shoppingCartItem.setAmount(dish.getPrice());
-            }else{
+            } else {
                 // 添加购物车的是套餐
                 Long setmealId = shoppingCartDTO.getSetmealId();
                 Setmeal setmeal = setmealMapper.getById(setmealId);
@@ -66,5 +66,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCartMapper.insert(shoppingCartItem);
         }
 
+    }
+
+    @Override
+    public List<ShoppingCartItem> list() {
+        return shoppingCartMapper.list(ShoppingCartItem.builder()
+                .userId(BaseContext.getCurrentId())
+                .build());
     }
 }
