@@ -18,4 +18,9 @@ public interface ShoppingCartService {
      * @return 购物车数据
      */
     List<ShoppingCartItem> list();
+
+    /**
+     * 清空购物车
+     */
+    void clean();
 }

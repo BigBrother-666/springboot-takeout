@@ -34,11 +34,17 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/list")
-    @ApiOperation("添加购物车")
+    @ApiOperation("查询购物车")
     public Result<List<ShoppingCartItem>> list() {
         log.info("用户{}查询购物车", BaseContext.getCurrentId());
         return Result.success(shoppingCartService.list());
     }
 
-
+    @DeleteMapping("/clean")
+    @ApiOperation("清空购物车")
+    public Result<String> clean() {
+        log.info("用户{}清空购物车", BaseContext.getCurrentId());
+        shoppingCartService.clean();
+        return Result.success();
+    }
 }
