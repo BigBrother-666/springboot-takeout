@@ -24,12 +24,12 @@ mybatis:
     #开启驼峰命名
     map-underscore-to-camel-case: true
     # 开启输出log日志
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
 
 logging:
   level:
-    com:
-      sky:
+    org:
+      bigbrother:
         mapper: debug
         service: info
         controller: info

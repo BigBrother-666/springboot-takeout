@@ -1,5 +1,6 @@
 package org.bigbrother.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.bigbrother.constant.MessageConstant;
@@ -18,15 +19,14 @@ import org.bigbrother.service.OrderService;
 import org.bigbrother.vo.OrderStatisticsVO;
 import org.bigbrother.vo.OrderSubmitVO;
 import org.bigbrother.vo.OrderVO;
+import org.bigbrother.websocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,17 +35,19 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDetailMapper orderDetailMapper;
     private final AddressBookMapper addressBookMapper;
     private final ShoppingCartMapper shoppingCartMapper;
+    private final WebSocketServer webSocketServer;
 
     @Autowired
     public OrderServiceImpl(OrderMapper orderMapper,
                             OrderDetailMapper orderDetailMapper,
                             AddressBookMapper addressBookMapper,
                             ShoppingCartMapper shoppingCartMapper,
-                            UserMapper userMapper) {
+                            WebSocketServer webSocketServer) {
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.addressBookMapper = addressBookMapper;
         this.shoppingCartMapper = shoppingCartMapper;
+        this.webSocketServer = webSocketServer;
     }
 
     @Override
@@ -217,6 +219,13 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+
+        // 通过websocket向浏览器推送数据
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", 1);
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号：" + outTradeNo);
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
     @Override
